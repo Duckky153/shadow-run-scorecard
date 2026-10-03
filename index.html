@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shadow Run Scorecard</title>
+  <meta name="description" content="Which shippers can stop human review after a two-week shadow run of an AI order-entry agent. Synthetic data.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="topline">
+        <span class="badge">Synthetic data</span>
+        <a id="feedback-link" class="navlink" href="feedback.html">Feedback for Product &rarr;</a>
+      </div>
+      <h1>Shadow Run Scorecard</h1>
+      <p class="lede">A fictional freight broker is two weeks into a shadow run of an AI order-entry agent. Tenders arrive as a PDF, an email or a spreadsheet; the agent extracts each load while reps still key the same load into the TMS by hand. Which shippers are ready to stop human review, and what is blocking the rest?</p>
+      <p id="result-sentence" class="result" aria-live="polite"></p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="controls" aria-label="Settings">
+      <label class="control">
+        <span>Match rate needed</span>
+        <select id="threshold"></select>
+      </label>
+      <label class="control toggle">
+        <input type="checkbox" id="commodity">
+        <span>Count commodity text</span>
+      </label>
+    </section>
+
+    <section aria-labelledby="shippers-title">
+      <h2 id="shippers-title">Shippers</h2>
+      <p class="hint">6 shippers, 72 loads, 8 critical fields per load. Select a shipper to see its mismatched fields.</p>
+      <div id="shipper-table"></div>
+    </section>
+
+    <section id="drilldown" class="card drilldown" hidden aria-live="polite">
+      <div class="dd-head">
+        <h2 id="dd-title"></h2>
+        <button type="button" id="dd-close" class="btn-quiet">Close</button>
+      </div>
+      <p id="dd-summary" class="hint"></p>
+      <div id="dd-loads"></div>
+    </section>
+
+    <section aria-labelledby="person-title">
+      <h2 id="person-title">Needs a person</h2>
+      <p class="hint">Fields where the tender itself contradicts the rep's record. They are left out of the match rate until someone settles them.</p>
+      <div id="needs-person"></div>
+    </section>
+
+    <section aria-labelledby="rules-title">
+      <h2 id="rules-title">Rules</h2>
+      <ol class="rules">
+        <li>A field matches when both values are equal after trimming spaces, ignoring case and writing dates and times one way; units are not converted, so a weight in kilograms fails.</li>
+        <li>Eight fields are critical (reference, pickup facility, delivery facility, pickup date, pickup appointment, delivery appointment, weight and stops), which makes 8 per load and 96 per shipper; commodity text counts only when the toggle is on.</li>
+        <li>A field the tender shows the rep got wrong is disputed, left out of the rate and listed under Needs a person.</li>
+        <li>A shipper's match rate is its matched critical fields divided by its compared critical fields.</li>
+        <li><strong>Ready to skip review</strong> means the rate is at or above the bar, at least 10 loads were seen and no mismatch type appears twice.</li>
+        <li><strong>Needs a config rule</strong> means the mismatches that repeat are all types that can be fixed in setup.</li>
+        <li><strong>Keep in review</strong> covers everything else, and the reason column says why.</li>
+      </ol>
+    </section>
+
+    <section class="card assumptions" aria-labelledby="assumptions-title">
+      <h2 id="assumptions-title">Assumptions</h2>
+      <ul>
+        <li>All data is synthetic. Every shipper, facility, reference number and load is made up.</li>
+        <li>The rep's record is the answer key, except where the tender shows the rep was wrong; those fields go to a person instead of counting against the agent.</li>
+        <li>Each load has 10 fields: reference/PO, pickup facility, pickup date, pickup appointment, delivery facility, delivery appointment, equipment, weight, stops and commodity. Equipment is recorded but not scored.</li>
+        <li>The TMS keeps times in Central. Values are shown exactly as stored; the comparison ignores case and format, not meaning.</li>
+        <li>The bar is the share of critical fields the agent must get right before a shipper's orders stop going through human review.</li>
+        <li>A shipper needs at least 10 loads in the shadow run before it can be judged ready.</li>
+        <li>Mismatch types come from simple checks, listed below. "Fixable in setup" means a deployment config rule can fix it without a product change.</li>
+      </ul>
+      <div class="table-scroll">
+        <table class="types">
+          <thead><tr><th>Mismatch type</th><th>How it is spotted</th><th>Fixable in setup</th></tr></thead>
+          <tbody id="types-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="questions-title">
+      <h2 id="questions-title">Questions I'd want answered</h2>
+      <ul class="questions">
+        <li>Do new accounts run a shadow period where reps still key orders, or do you compare against the TMS afterwards?</li>
+        <li>Is go-live decided per shipper, per customer or per field?</li>
+        <li>What match rate takes a shipper off review, and is the bar higher for appointment times than for reference numbers?</li>
+        <li>When the rep's record and the tender disagree, who settles it?</li>
+        <li>Which fixes happen in configuration during deployment, and which go back to Engineering?</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">Built by Dakshit Raj</div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="scorecard.mjs"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feedback for Product | Shadow Run Scorecard</title>
+  <meta name="description" content="The shadow-run mismatches turned into structured feedback items, one row per pattern. Synthetic data.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="topline">
+        <span class="badge">Synthetic data</span>
+        <a id="back-link" class="navlink" href="index.html">&larr; Shadow Run Scorecard</a>
+      </div>
+      <h1>Feedback for Product</h1>
+      <p class="lede">The same shadow-run mismatches, grouped into one row per pattern so each one has an owner, a go-live impact and a next step.</p>
+      <p id="fb-sentence" class="result" aria-live="polite"></p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p id="fb-settings" class="hint"></p>
+
+    <section aria-labelledby="items-title">
+      <h2 id="items-title">Feedback items</h2>
+      <div id="fb-table"></div>
+    </section>
+
+    <section class="card copy" aria-labelledby="copy-title">
+      <h2 id="copy-title">Paste into a team channel</h2>
+      <div class="copy-row">
+        <button type="button" id="copy-btn" class="btn">Copy as text</button>
+        <span id="copy-status" class="hint" role="status"></span>
+      </div>
+      <label for="copy-box" class="sr-only">Plain-text summary</label>
+      <textarea id="copy-box" readonly rows="10" spellcheck="false"></textarea>
+    </section>
+
+    <section aria-labelledby="built-title">
+      <h2 id="built-title">How the rows are built</h2>
+      <ol class="rules">
+        <li>Each row is one mismatch type from the scorecard, plus one row for disputed rep records.</li>
+        <li>Loads affected counts distinct loads, and rows are sorted by it.</li>
+        <li>Who fixes it is a fixed choice per type: setup problems go to deployment config, extraction gaps go to Product and Engineering, and a wrong rep record goes back to the customer's data.</li>
+        <li>A pattern blocks go-live for a shipper that is not ready when the pattern repeats there or the shipper is under the bar.</li>
+        <li>Disputed records never block go-live, because disputed fields are left out of the match rate.</li>
+      </ol>
+    </section>
+
+    <section class="closing" aria-labelledby="question-title">
+      <h2 id="question-title">One question</h2>
+      <p>How does feedback from deployments reach Product today?</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">Built by Dakshit Raj</div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="scorecard.mjs"></script>
+  <script src="feedback.js"></script>
+</body>
+</html>
